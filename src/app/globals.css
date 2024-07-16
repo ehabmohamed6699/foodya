@@ -1,0 +1,20 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* .screen-fill{
+  height: calc(100vh - 4rem);
+} */
+
+.pasta {
+  animation: jumper 1s linear infinite alternate !important;
+}
+
+@keyframes jumper {
+  from {
+    margin-top: 0;
+  }
+  to {
+    margin-top: -1rem;
+  }
+} 
