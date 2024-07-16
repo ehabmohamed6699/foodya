@@ -2,16 +2,16 @@ import { User } from "@/lib/models"
 import { connectToDB } from "@/lib/utils"
 import bcrypt from "bcryptjs"
 
-export const GET = async (req:Request, res:Response) => {
-    try{
-        await connectToDB()
-        const users = await User.find()
-        return new Response(JSON.stringify(users), {status: 200})
-    }catch(error){
-        console.log(error)
-        return new Response('Server Error', {status: 500})
-    }
-}
+// export const GET = async (req:Request, res:Response) => {
+//     try{
+//         await connectToDB()
+//         const users = await User.find()
+//         return new Response(JSON.stringify(users), {status: 200})
+//     }catch(error){
+//         console.log(error)
+//         return new Response('Server Error', {status: 500})
+//     }
+// }
 
 export const POST = async (req:Request, res:Response) => {
     try{

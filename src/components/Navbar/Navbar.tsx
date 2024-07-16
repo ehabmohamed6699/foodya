@@ -16,7 +16,7 @@ import { UploadButton } from "@/utils/uploadthing";
 const Navbar = () => {
     const {data:session, update} = useSession()
     // signOut()
-    // console.log(session?.user)
+    console.log(session?.user)
     const [open, setOpen] = useState<boolean>(false)
     const [changeProfileOpen, setChangeProfileOpen] = useState<boolean>(false)
     const [error, setError] = useState<string>("")

@@ -18,11 +18,17 @@ const config: Config = withUt({
       },
       height:{
         "screenfill": "calc(100vh - 4rem)"
+      },
+      minHeight:{
+        "screenfill": "calc(100vh - 4rem)"
       }
     },
   },
   plugins: [
     require('daisyui'),
   ],
+  daisyui: {
+    themes: ["light", "dark", "cupcake"],
+  },
 });
 export default config;
