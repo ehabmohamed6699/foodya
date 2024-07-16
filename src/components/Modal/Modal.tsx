@@ -19,7 +19,9 @@ const Modal = (props:any) => {
       <>
         <Button
           onClick={()=>{
-              props.onClick()
+              if(props.onClick){
+                props.onClick()
+              }
               open()
           }}
           className={props.buttonStyle}

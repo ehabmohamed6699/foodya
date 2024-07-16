@@ -9,16 +9,24 @@ import Login from '../Login/Login'
 import { signOut, useSession } from 'next-auth/react'
 import User from "@/assets/images/user.svg"
 import Image from 'next/image'
+import Modal from '../Modal/Modal'
+import { UploadButton } from "@/utils/uploadthing";
 
 
 const Navbar = () => {
-    const {data:session} = useSession()
+    const {data:session, update} = useSession()
     // signOut()
     // console.log(session?.user)
     const [open, setOpen] = useState<boolean>(false)
+    const [changeProfileOpen, setChangeProfileOpen] = useState<boolean>(false)
+    const [error, setError] = useState<string>("")
     const paths = [{path:'/', name:"Home"}, {path: '/about', name: 'About'},{path: '/recipes', name: 'Recipes'}]
     const [visible, setVisible] = useState<boolean>(false)
     const pathname = usePathname()
+    const hide = ()=>{
+        setVisible(false)
+        setOpen(false)
+    } 
     useEffect(() => {
         if(open){
             document.body.style.overflow = 'hidden'
@@ -48,7 +56,42 @@ const Navbar = () => {
             <Image src={session?.user?.image || User} alt="profile" width={36} height={36} className='rounded-full'/>
             <p>{session?.user?.name}</p>
             <div className={`w-64 z-40 h-28 bg-white absolute top-full right-0 hidden ${visible?"md:flex flex-col gap-2":"md:hidden"} items-center justify-center transition-all duration-500`}>
-                <Link href="/changeImage" className=' bg-[#FB6D48] text-white px-10 py-2 w-full rounded-full'>Change profile picture</Link>
+                {/* <Link href="/changeImage" className=' bg-[#FB6D48] text-white px-10 py-2 w-full rounded-full'>Change profile picture</Link> */}
+                <Modal content="Change profile picture" buttonStyle="bg-[#FB6D48] text-white px-10 py-2 w-full rounded-full" onClick={hide} isOpen={changeProfileOpen} setIsOpen={setChangeProfileOpen}>
+                    <UploadButton
+                        endpoint="imageUploader"
+                        onClientUploadComplete={async (res) => {
+                            if(res){
+                                // console.log(res)
+                                const result = await fetch('/api/users', {
+                                    method: 'PATCH',
+                                    headers: {
+                                    'Content-Type': 'application/json'
+                                    },
+                                    body: JSON.stringify({image:res[0]?.url, email:session?.user?.email})
+                                })
+                                if(result.ok){
+                                    try {
+                                        setChangeProfileOpen(false)
+                                        await update({...session, user:{
+                                            ...session?.user,
+                                            image: res[0]?.url
+                                        }})
+                                    } catch (error) {
+                                        setError(error as string)
+                                    }
+                                }
+                            }
+                        //   console.log("Files: ", res);
+                        //   alert("Upload Completed");
+                        }}
+                        onUploadError={(error: Error) => {
+                        // Do something with the error.
+                        //   alert(`ERROR! ${error.message}`);
+                        }}
+                    />
+                    {error && <p className='text-red-500 text-xl'>{error}</p>}
+                </Modal>
                 <button onClick={()=>{
                     signOut()
                 }} className="text-[#FB6D48] px-10 py-2 w-full rounded-full transition-all duration-500 mx-auto">Log out</button>
@@ -74,9 +117,41 @@ const Navbar = () => {
                     </div>
                     <p>{session?.user?.name}</p>
                 </div>}
-                {session?.user && <Link onClick={()=>{
-                    setOpen(false)
-                }} href="/changeImage" className=' bg-[#FB6D48] text-white px-10 py-2 rounded-full'>Change profile picture</Link>
+                {session?.user && <Modal content="Change profile picture" buttonStyle="bg-[#FB6D48] text-white text-xl px-10 py-2 rounded-full" onClick={hide} isOpen={changeProfileOpen} setIsOpen={setChangeProfileOpen}>
+                    <UploadButton
+                        endpoint="imageUploader"
+                        onClientUploadComplete={async (res) => {
+                            if(res){
+                                // console.log(res)
+                                const result = await fetch('/api/users', {
+                                    method: 'PATCH',
+                                    headers: {
+                                    'Content-Type': 'application/json'
+                                    },
+                                    body: JSON.stringify({image:res[0]?.url, email:session?.user?.email})
+                                })
+                                if(result.ok){
+                                    try {
+                                        setChangeProfileOpen(false)
+                                        await update({...session, user:{
+                                            ...session?.user,
+                                            image: res[0]?.url
+                                        }})
+                                    } catch (error) {
+                                        setError(error as string)
+                                    }
+                                }
+                            }
+                        //   console.log("Files: ", res);
+                        //   alert("Upload Completed");
+                        }}
+                        onUploadError={(error: Error) => {
+                        // Do something with the error.
+                        //   alert(`ERROR! ${error.message}`);
+                        }}
+                    />
+                    {error && <p className='text-red-500 text-xl'>{error}</p>}
+                </Modal>
                 }
                 {session?.user && <button onClick={()=>{
                     setOpen(false)
