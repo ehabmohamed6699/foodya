@@ -74,7 +74,7 @@ const login = async () => {
             {error && <div className='bg-red-500 text-white rounded-lg py-2 flex items-center justify-center'>{error}</div>}
             <p className='text-center text-lg'>or</p>
             <Button onClick={async ()=>{
-                await signIn("facebook", { callbackUrl: "http://localhost:3000" })
+                await signIn("facebook", { callbackUrl: process.env.NEXTAUTH_URL! })
             }} className='bg-[#1877F2] text-white rounded-lg py-2 flex items-center gap-2 justify-center'>Log in with Facebook <FaFacebook /></Button>
         </form>
     </Modal>
