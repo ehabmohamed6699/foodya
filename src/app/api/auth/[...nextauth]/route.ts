@@ -3,15 +3,15 @@ import { User } from "@/lib/models";
 import NextAuth from "next-auth/next";
 import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
-import { NextAuthOptions } from "next-auth";
+import { AuthOptions, NextAuthOptions } from "next-auth";
 import FacebookProvider from "next-auth/providers/facebook";
 import { MongoDBAdapter } from "@auth/mongodb-adapter";
 import { MongoClient } from "mongodb";
 import { Adapter } from "next-auth/adapters";
 // const adapter = MongoDBAdapter(clientPromise() as Promise<MongoClient>) as Adapter;
 
-export const authOptions:NextAuthOptions = {
-  // adapter: MongoDBAdapter(clientPromise() as Promise<MongoClient>) as any,
+export const authOptions:AuthOptions = {
+  adapter: MongoDBAdapter(clientPromise() as Promise<MongoClient>) as Adapter,
   providers: [
     CredentialsProvider({
       type: "credentials",
