@@ -101,7 +101,20 @@ const handler = NextAuth({
   secret: process.env.NEXTAUTH_SECRET,
   pages: {
     signIn: "/",
-  },
+  },callbacks: {
+    async jwt({token, user, trigger, session}) {
+      if(trigger === "update"){
+        return {...token, ...session.user}
+      }
+      return {...token, ...user}
+    },
+
+    async session({ session, token }) {
+      session.user = token as any;
+      return session;
+    }
+  }
+  
 });
 
 export { handler as GET, handler as POST };

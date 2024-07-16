@@ -4,7 +4,7 @@ import { UploadButton } from "@/utils/uploadthing";
 import { useSession } from "next-auth/react";
  
 export default function Home() {
-    const {data:session} = useSession()
+    const {data:session, update} = useSession()
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
       <UploadButton
@@ -19,6 +19,12 @@ export default function Home() {
                     },
                     body: JSON.stringify({image:res[0]?.url, email:session?.user?.email})
                   })
+                if(result.ok){
+                    await update({...session, user:{
+                        ...session?.user,
+                        image: res[0]?.url
+                    }})
+                }
             }
         //   console.log("Files: ", res);
         //   alert("Upload Completed");
