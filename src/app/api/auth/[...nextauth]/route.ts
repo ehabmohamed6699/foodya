@@ -8,9 +8,10 @@ import FacebookProvider from "next-auth/providers/facebook";
 import { MongoDBAdapter } from "@auth/mongodb-adapter";
 import { MongoClient } from "mongodb";
 import { Adapter } from "next-auth/adapters";
+// const adapter = MongoDBAdapter(clientPromise() as Promise<MongoClient>) as Adapter;
 
 export const authOptions:NextAuthOptions = {
-  adapter: MongoDBAdapter(clientPromise() as Promise<MongoClient>) as Adapter,
+  adapter: MongoDBAdapter(clientPromise() as Promise<MongoClient>) as any,
   providers: [
     CredentialsProvider({
       type: "credentials",
