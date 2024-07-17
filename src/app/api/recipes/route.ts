@@ -5,7 +5,7 @@ import jwt, { JwtPayload } from "jsonwebtoken"
 
 const secret = process.env.NEXTAUTH_SECRET;
 
-const authorizationCheck = (req:Request, data:{userId:String}) => {
+const authorizationCheck = (req:Request) => {
         const token = req.headers.get('Authorization')?.split(' ')[1];
 
         if (!token) {
@@ -19,33 +19,36 @@ const authorizationCheck = (req:Request, data:{userId:String}) => {
         let decodedToken: JwtPayload;
         try {
             decodedToken = jwt.verify(token, secret) as JwtPayload;
-            if(decodedToken.id !== data.userId){
-                return false
-            }
         } catch (error) {
             return false
         }
-        return true
+        return decodedToken.id;
 }
 
 export const GET = async (req:Request, res:Response) => {
     try{
+        const {searchParams} = new URL(req.url)
+        const page: any = parseInt(searchParams.get("page") || "1");
+        const limit: any = parseInt(searchParams.get("limit") || "10");
         await connectToDB()
         const url = new URL(req.url);
         const keyword = url.searchParams.get('keyword');
         let recipes;
+        const filters: any = {}
         if(keyword){
-            const regex = new RegExp(keyword, 'i');
-            recipes = await Recipe.find({
-                $or: [
-                    { title: { $regex: regex } },
-                    { category: { $regex: regex } }
-                ]
-            });
-        }else{
-            recipes = await Recipe.find()
+            filters.$or = [
+                {
+                    title: { $regex: keyword, $options: "i" },
+                },
+                {
+                    category: { $regex: keyword, $options: "i" },
+                },
+            ];
         }
-        return new Response(JSON.stringify(recipes), {status: 200})
+        const skip = (page - 1) * limit;
+        const total = await Recipe.countDocuments(filters);
+        recipes = await Recipe.find(filters).sort({createdAt:"desc"}).skip(skip).limit(limit);
+        return new Response(JSON.stringify({recipes, page, totalPages:parseInt(`${total/limit}`) + 1}), {status: 200})
     }catch(error){
         console.log(error)
         return new Response('Server Error', {status: 500})
@@ -56,16 +59,16 @@ export const POST = async (req:Request, res:Response) => {
     try{
         await connectToDB()
         const data = await req.json()
-        const keys = ["title", "category", "description", "ingredients", "instructions", "image", "servingSize", "cookTime", "userId"]
+        const keys = ["title", "category", "description", "ingredients", "instructions", "image", "servingSize", "cookTime"]
         if(JSON.stringify(keys.sort()) !== JSON.stringify(Object.keys(data).sort())){
             return new Response('All fields are required', {status: 400})
         }
-        if(!authorizationCheck(req, data)){
+        const uid: boolean|String = authorizationCheck(req)
+        if(!authorizationCheck(req)){
             return new Response('Unauthorized', { status: 401 });
         }
-        const user = await User.findById(data.userId);
+        const user = await User.findById(uid);
         const newRecipe = new Recipe({...data, user:user})
-        // return new Response(JSON.stringify(newRecipe), {status: 200})
 
         await newRecipe.save()
         return new Response('Recipe Created', {status: 201})
@@ -78,19 +81,14 @@ export const PATCH = async (req:Request, res:Response) => {
     try{
         await connectToDB()
         const data = await req.json()
-        if(!authorizationCheck(req, data)){
+        const uid = authorizationCheck(req)
+        if(!uid){
             return new Response('Unauthorized', { status: 401 });
         }
         const url = new URL(req.url);
         const id = url.searchParams.get('id');
         const recipe = await Recipe.findById(id)
-        // return new Response(JSON.stringify(recipe), {status: 200})
-        const token = req.headers.get('Authorization')?.split(' ')[1];
-        if(!token){
-            return new Response('Unauthorized', { status: 401 });
-        }
-        const decodedToken = jwt.verify(token, secret!) as JwtPayload;
-        if(recipe.user != decodedToken.id){
+        if(recipe.user != uid){
             return new Response('Unauthorized', { status: 401 });
         }
         await Recipe.findByIdAndUpdate(id, data)
@@ -104,19 +102,15 @@ export const DELETE = async (req:Request, res:Response) => {
     try{
         await connectToDB()
         const data = await req.json()
-        if(!authorizationCheck(req, data)){
+        const uid = authorizationCheck(req)
+        if(!uid){
             return new Response('Unauthorized', { status: 401 });
         }
         const url = new URL(req.url);
         const id = url.searchParams.get('id');
         const recipe = await Recipe.findById(id)
-        // return new Response(JSON.stringify(recipe), {status: 200})
-        const token = req.headers.get('Authorization')?.split(' ')[1];
-        if(!token){
-            return new Response('Unauthorized', { status: 401 });
-        }
-        const decodedToken = jwt.verify(token, secret!) as JwtPayload;
-        if(recipe.user != decodedToken.id){
+        
+        if(recipe.user != uid){
             return new Response('Unauthorized', { status: 401 });
         }
         await Recipe.findByIdAndDelete(id)
