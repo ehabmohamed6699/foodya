@@ -62,7 +62,7 @@ const Recipes = () => {
       {isLoading?<LoadingSkeleton/>:error?<p className='text-2xl font-bold text-[#FB6D48]'>{error}</p>:recipes?.recipes?.length === 0?<p className='text-2xl font-bold text-[#FB6D48]'>No recipes to show</p>:<GridViewer>
           {recipes?.recipes?.map((recipe, index) => (<RecipeCard key={index} recipe={recipe}/>))}
         </GridViewer>}
-      {!isLoading && !error && recipes?.recipes?.length && <Paginator page={page} setPage={setPage} totalPages={recipes?.totalPages || 1}/>}
+      {!isLoading && !error && recipes?.recipes?.length !== 0 && <Paginator page={page} setPage={setPage} totalPages={recipes?.totalPages || 1}/>}
       <CreateRecipe fetchRecipes={fetchRecipes}/>
     </div>
   )
