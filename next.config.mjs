@@ -15,6 +15,11 @@ const nextConfig = {
                 protocol: 'https',
                 hostname:'img.daisyui.com'
             }
+            ,
+            {
+                protocol: 'https',
+                hostname:'www.themealdb.com'
+            }
         ]
     }
 };

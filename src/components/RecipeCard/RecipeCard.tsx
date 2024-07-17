@@ -12,7 +12,7 @@ const RecipeCard = ({recipe}:{recipe:{[key:string]:any}}) => {
         <figure>
             <Image
             src={recipe?.image}
-            alt="Recipe image" width={256} height={256}/>
+            alt="Recipe image" width={256} height={256} className="w-[256px] h-[256px]"/>
         </figure>
         <div className="card-body px-4">
             <h2 className="card-title text-base">

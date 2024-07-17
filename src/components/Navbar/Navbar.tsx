@@ -11,6 +11,7 @@ import User from "@/assets/images/user.svg"
 import Image from 'next/image'
 import Modal from '../Modal/Modal'
 import { UploadButton } from "@/utils/uploadthing";
+import { url } from 'inspector'
 
 
 const Navbar = () => {
@@ -53,7 +54,7 @@ const Navbar = () => {
         }} onMouseLeave = {()=>{
             setVisible(false)
         }} className='hidden md:flex items-center gap-2 cursor-pointer relative  px-20'>
-            <Image src={session?.user?.image || User} alt="profile" width={36} height={36} className='rounded-full'/>
+            <Image src={session?.user?.image || User} alt="profile" width={36} height={36} className='rounded-full w-[36px] h-[36px]'/>
             <p>{session?.user?.name}</p>
             <div className={`w-64 z-40 h-28 bg-white absolute top-full right-0 hidden ${visible?"md:flex flex-col gap-2":"md:hidden"} items-center justify-center transition-all duration-500`}>
                 {/* <Link href="/changeImage" className=' bg-[#FB6D48] text-white px-10 py-2 w-full rounded-full'>Change profile picture</Link> */}
@@ -73,10 +74,18 @@ const Navbar = () => {
                                 if(result.ok){
                                     try {
                                         setChangeProfileOpen(false)
+                                        const imageURL = session?.user?.image
                                         await update({...session, user:{
                                             ...session?.user,
                                             image: res[0]?.url
                                         }})
+                                        await fetch('/api/uploadthing', {
+                                            method: 'DELETE',
+                                            headers: {
+                                            'Content-Type': 'application/json'
+                                            },
+                                            body: JSON.stringify({url:imageURL})
+                                        })
                                     } catch (error) {
                                         setError(error as string)
                                     }
@@ -113,7 +122,7 @@ const Navbar = () => {
                 </ul>
                 {session?.user && <div className='flex items-center gap-2'>
                     <div>
-                        <Image src={session?.user?.image || User} alt="profile" width={36} height={36} className='rounded-full'/>
+                        <Image src={session?.user?.image || User} alt="profile" width={36} height={36} className='rounded-full w-[36px] h-[36px]'/>
                     </div>
                     <p>{session?.user?.name}</p>
                 </div>}
@@ -133,10 +142,18 @@ const Navbar = () => {
                                 if(result.ok){
                                     try {
                                         setChangeProfileOpen(false)
+                                        const imageURL = session?.user?.image
                                         await update({...session, user:{
                                             ...session?.user,
                                             image: res[0]?.url
                                         }})
+                                        await fetch('/api/uploadthing', {
+                                            method: 'DELETE',
+                                            headers: {
+                                            'Content-Type': 'application/json'
+                                            },
+                                            body: JSON.stringify({url:imageURL})
+                                        })
                                     } catch (error) {
                                         setError(error as string)
                                     }

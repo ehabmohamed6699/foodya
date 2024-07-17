@@ -3,6 +3,10 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar/Navbar";
 import { AuthProvider } from "./providers";
+import { NextSSRPlugin } from "@uploadthing/react/next-ssr-plugin";
+import { extractRouterConfig } from "uploadthing/server";
+ 
+import { ourFileRouter } from "@/app/api/uploadthing/core";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -23,6 +27,9 @@ export default function RootLayout({
     <html data-theme="light" lang="en">
       
       <body className={`${inter.className} md:px-24 px-6 bg-white text-black`}>
+        <NextSSRPlugin
+            routerConfig={extractRouterConfig(ourFileRouter)}
+          />
         <AuthProvider>
           <Navbar/>
           {children}

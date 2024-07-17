@@ -4,6 +4,7 @@ import LoadingSkeleton from '@/components/LoadingSkeleton/LoadingSkeleton'
 import React, { useState, useEffect } from 'react'
 import RecipeCard from '@/components/RecipeCard/RecipeCard'
 import Paginator from '@/components/Paginator/Paginator'
+import CreateRecipe from '@/components/CreateRecipe/CreateRecipe'
 
 const Recipes = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true)
@@ -43,7 +44,7 @@ const Recipes = () => {
     console.log(recipes)
   },[recipes])
   return (
-    <div className='min-h-screenfill py-24 flex flex-col items-center gap-10'>
+    <div className='min-h-screenfill py-24 flex flex-col items-center gap-10 relative'>
       <h1 className='text-2xl md:text-3xl lg:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-[#FB6D48]  to-[#FFAF45] text-center'>Explore food recipes to make your own sweet plates</h1>
       <form className='flex items-center' onSubmit={(e)=>{
         e.preventDefault()
@@ -62,6 +63,7 @@ const Recipes = () => {
           {recipes?.recipes?.map((recipe, index) => (<RecipeCard key={index} recipe={recipe}/>))}
         </GridViewer>}
       {!isLoading && !error && <Paginator page={page} setPage={setPage} totalPages={recipes?.totalPages || 1}/>}
+      <CreateRecipe fetchRecipes={fetchRecipes}/>
     </div>
   )
 }
