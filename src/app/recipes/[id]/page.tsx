@@ -73,9 +73,9 @@ const RecipePage = () => {
                   {/* <div className="badge badge-outline">Products</div> */}
               </div>
             </div>
-            <button onClick={deleteRecipe} className='bg-red-500 text-white text-lg p-4 rounded-full fixed bottom-28 right-10 md:right-32 flex items-center justify-center'>
+            {(session?.user as any)?.id === recipe?.user?._id && <button onClick={deleteRecipe} className='bg-red-500 text-white text-lg p-4 rounded-full fixed bottom-28 right-10 md:right-32 flex items-center justify-center'>
               {deleteLoading?<span className="loading loading-spinner loading-sm"></span>:<MdDelete />}
-            </button>
+            </button>}
             <UpdateRecipe recipe={recipe} fetchRecipe={getRecipe}/>
           </div>
           <div>

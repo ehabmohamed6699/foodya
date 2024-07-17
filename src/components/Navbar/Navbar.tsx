@@ -36,7 +36,7 @@ const Navbar = () => {
         }
     }, [open])
   return (
-    <div className='w-full min-h-16 flex items-center justify-between relative'>
+    <div className='w-full min-h-16 flex items-center justify-between '>
         <Link href={"/"} className='text-transparent bg-clip-text bg-gradient-to-r from-[#FB6D48]  to-[#FFAF45] font-extrabold text-3xl'>Foodya</Link>
         <ul className='md:flex items-center gap-6 hidden'>
             {paths.map((path, index) => <li key={index}><Link href={path.path} className={`${pathname === path.path && "text-[#FB6D48]"} transition-all duration-500`}>{path.name}</Link></li>)}

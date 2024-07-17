@@ -8,7 +8,7 @@ export default function Home() {
     <div className="flex md:flex-row flex-col-reverse h-fit md:h-screenfill md:pb-0 pb-10">
       <div className="md:w-1/2 w-full flex flex-col gap-10 md:items-start items-center h-inherit md:pt-32 pt-16">
         <h1 className="text-[#FB6D48] font-extrabold text-4xl md:text-left text-center">#1 website for sharing recipes</h1>
-        <p className="md:text-left text-center">Lorem ipsum dolor sit amet consectetur adipisicing elit. Excepturi sunt fugiat sint quam veritatis, eos ipsam ullam vero rerum voluptatibus, sapiente praesentium, consequatur nihil quas voluptatum enim temporibus quo corporis.</p>
+        <p className="md:text-left text-center">Foodya is your go-to platform for discovering and sharing delicious recipes from around the world. Whether you{"'"}re a culinary enthusiast or just starting in the kitchen, Foodya provides an easy and engaging way to find new recipes, share your own creations, and connect with other food lovers. Our goal is to create a vibrant community where everyone can contribute and find inspiration for their next meal.</p>
         <Link href={"/recipes"} className="px-6 py-3 rounded-full transition-all duration-500 bg-gradient-to-r from-[#FB6D48]  to-[#FFAF45] text-white">Explore recipes</Link>
       </div>
       <div className="md:w-1/2 w-full relative flex items-center  md:h-inherit md:justify-end justify-center">
