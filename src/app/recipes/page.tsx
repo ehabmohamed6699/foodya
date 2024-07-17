@@ -13,6 +13,18 @@ const Recipes = () => {
   const [recipes, setRecipes] = useState<{recipes:{[key:string]:any}[], totalPages:number}|null>()
   const [page, setPage] = useState<number>(1)
   const [error, setError] = useState<string>('')
+  const refetchRecipes = async () => {
+    setIsLoading(true)
+    let data;
+    try {
+      data = await fetch(`/api/recipes?page=${page}`)
+      setRecipes(await data.json())
+    } catch (error) {
+      setError('Failed to load recips')
+    }finally{
+      setIsLoading(false)
+    }
+  }
   const fetchRecipes = async () => {
     setIsLoading(true)
     let data;
@@ -40,9 +52,9 @@ const Recipes = () => {
   useEffect(()=>{
     fetchRecipes()
   },[page])
-  useEffect(() => {
-    console.log(recipes)
-  },[recipes])
+  // useEffect(() => {
+  //   console.log(recipes)
+  // },[recipes])
   return (
     <div className='min-h-screenfill py-24 flex flex-col items-center gap-10 relative'>
       <h1 className='text-2xl md:text-3xl lg:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-[#FB6D48]  to-[#FFAF45] text-center'>Explore food recipes to make your own sweet plates</h1>
@@ -54,7 +66,7 @@ const Recipes = () => {
           setKeyword(e.target.value)
           if(!e.target.value){
             setPage(1)
-            fetchRecipes()
+            refetchRecipes()
           }
         }} placeholder='Search for recipes' className='px-4 py-2 bg-blue-100 rounded-tl-lg rounded-bl-lg focus:outline-none max-w-inherit md:w-96'/>
         <button type='submit' className='bg-[#FB6D48] text-white rounded-tr-lg rounded-br-lg py-2 px-4'>Search</button>

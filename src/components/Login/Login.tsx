@@ -41,7 +41,7 @@ const login = async () => {
         setLoading(false);
         return
       }
-      console.log(res)
+      // console.log(res)
     setOpen(false); // Close login modal (if applicable)
     setUser({ email: '', password: '' }); // Clear user input
     } catch (error) {
