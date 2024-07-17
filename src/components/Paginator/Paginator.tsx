@@ -1,8 +1,11 @@
-import React, { Dispatch, SetStateAction } from 'react'
+import React, { Dispatch, SetStateAction, useEffect } from 'react'
 import { FaAngleLeft, FaAngleRight } from "react-icons/fa6";
 
 
 const Paginator = ({page, setPage, totalPages}:{page:number, setPage:Dispatch<SetStateAction<number>>, totalPages:number}) => {
+  useEffect(()=>{
+    window.scrollTo({top:0, behavior:'smooth'})
+  },[page])
   return (
     <div className='flex items-center gap-10'>
       <button onClick={()=>{

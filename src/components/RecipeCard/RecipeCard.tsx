@@ -8,7 +8,7 @@ import Link from 'next/link';
 
 const RecipeCard = ({recipe}:{recipe:{[key:string]:any}}) => {
   return (
-    <Link href={`/${recipe?._id}`} className="card bg-base-100 w-64 shadow-xl">
+    <Link href={`/recipes/${recipe?._id}`} className="card bg-base-100 w-64 shadow-xl">
         <figure>
             <Image
             src={recipe?.image}

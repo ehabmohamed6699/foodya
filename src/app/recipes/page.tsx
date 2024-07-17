@@ -32,6 +32,7 @@ const Recipes = () => {
     if(previousKeyword === keyword){
       return
     }
+    setPage(1)
     await fetchRecipes()
     setPreviousKeyword(keyword)
   }
@@ -50,6 +51,10 @@ const Recipes = () => {
       }}>
         <input type="text" value={keyword} onChange={(e)=>{
           setKeyword(e.target.value)
+          if(!e.target.value){
+            setPage(1)
+            fetchRecipes()
+          }
         }} placeholder='Search for recipes' className='px-4 py-2 bg-blue-100 rounded-tl-lg rounded-bl-lg focus:outline-none max-w-inherit md:w-96'/>
         <button type='submit' className='bg-[#FB6D48] text-white rounded-tr-lg rounded-br-lg py-2 px-4'>Search</button>
       </form>
