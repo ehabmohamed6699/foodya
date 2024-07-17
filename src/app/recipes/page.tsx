@@ -59,10 +59,10 @@ const Recipes = () => {
         }} placeholder='Search for recipes' className='px-4 py-2 bg-blue-100 rounded-tl-lg rounded-bl-lg focus:outline-none max-w-inherit md:w-96'/>
         <button type='submit' className='bg-[#FB6D48] text-white rounded-tr-lg rounded-br-lg py-2 px-4'>Search</button>
       </form>
-      {isLoading?<LoadingSkeleton/>:error?<p>{error}</p>:recipes?.recipes?.length === 0?<p>No recipes to show</p>:<GridViewer>
+      {isLoading?<LoadingSkeleton/>:error?<p className='text-2xl font-bold text-[#FB6D48]'>{error}</p>:recipes?.recipes?.length === 0?<p className='text-2xl font-bold text-[#FB6D48]'>No recipes to show</p>:<GridViewer>
           {recipes?.recipes?.map((recipe, index) => (<RecipeCard key={index} recipe={recipe}/>))}
         </GridViewer>}
-      {!isLoading && !error && <Paginator page={page} setPage={setPage} totalPages={recipes?.totalPages || 1}/>}
+      {!isLoading && !error && recipes?.recipes?.length && <Paginator page={page} setPage={setPage} totalPages={recipes?.totalPages || 1}/>}
       <CreateRecipe fetchRecipes={fetchRecipes}/>
     </div>
   )

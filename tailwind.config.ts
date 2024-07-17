@@ -21,6 +21,9 @@ const config: Config = withUt({
       },
       minHeight:{
         "screenfill": "calc(100vh - 4rem)"
+      },
+      maxHeight:{
+        "screenfill": "calc(100vh - 4rem)"
       }
     },
   },

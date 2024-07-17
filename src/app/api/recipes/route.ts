@@ -47,7 +47,7 @@ export const GET = async (req:Request, res:Response) => {
         }
         const skip = (page - 1) * limit;
         const total = await Recipe.countDocuments(filters);
-        recipes = await Recipe.find(filters).sort({createdAt:"desc"}).skip(skip).limit(limit);
+        recipes = await Recipe.find(filters).sort({createdAt:"desc"}).skip(skip).limit(limit).populate('user', 'name email image');
         return new Response(JSON.stringify({recipes, page, totalPages:parseInt(`${total/limit}`) + 1}), {status: 200})
     }catch(error){
         console.log(error)
