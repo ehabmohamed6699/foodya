@@ -3,17 +3,41 @@ import Image from 'next/image'
 import React,{useEffect, useState} from 'react'
 import { ImClock } from "react-icons/im";
 import { BiDish } from "react-icons/bi";
+import UpdateRecipe from '@/components/UpdateRecipe/UpdateRecipe';
+import { MdDelete } from "react-icons/md";
+import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
+
 
 const RecipePage = () => {
-  const [recipe, setRecipe] = useState<{[key:string]:any} | null>()
+  const [recipe, setRecipe] = useState<{[key:string]:any}>({})
+  const {data:session} = useSession()
   const [isLoading, setIsLoading] = useState(true)
-  useEffect(()=>{
-    const getRecipe = async () => {
-      const res = await fetch(`/api/recipes/${window.location.pathname.split('/').pop()}`)
-      const data = await res.json()
-      setRecipe(data)
-      setIsLoading(false)
+  const [deleteLoading, setDeleteLoading] = useState(false)
+  const router = useRouter();
+  const getRecipe = async () => {
+    const res = await fetch(`/api/recipes/${window.location.pathname.split('/').pop()}`)
+    const data = await res.json()
+    setRecipe(data)
+    setIsLoading(false)
+  }
+
+  const deleteRecipe = async () => {
+    setDeleteLoading(true)
+    const res = await fetch(`/api/recipes?id=${recipe._id}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${(session?.user as any)?.token}`
+      }
+    })
+    if(res.ok){
+      setDeleteLoading(false)
+      router.push('/recipes');
     }
+    setDeleteLoading(false)
+  }
+  useEffect(()=>{
     getRecipe()
   },[])
   return (
@@ -49,6 +73,10 @@ const RecipePage = () => {
                   {/* <div className="badge badge-outline">Products</div> */}
               </div>
             </div>
+            <button onClick={deleteRecipe} className='bg-red-500 text-white text-lg p-4 rounded-full fixed bottom-28 right-10 md:right-32 flex items-center justify-center'>
+              {deleteLoading?<span className="loading loading-spinner loading-sm"></span>:<MdDelete />}
+            </button>
+            <UpdateRecipe recipe={recipe} fetchRecipe={getRecipe}/>
           </div>
           <div>
             <h1 className="text-4xl font-bold text-[#FB6D48]">Description</h1>

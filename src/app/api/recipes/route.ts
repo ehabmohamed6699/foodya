@@ -101,7 +101,6 @@ export const PATCH = async (req:Request, res:Response) => {
 export const DELETE = async (req:Request, res:Response) => {
     try{
         await connectToDB()
-        const data = await req.json()
         const uid = authorizationCheck(req)
         if(!uid){
             return new Response('Unauthorized', { status: 401 });
